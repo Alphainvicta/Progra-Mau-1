@@ -17,7 +17,7 @@ void menu_principal() {
 }
 
 //funcion de eleccion pokemon
-void eleccion_pokemon(int &eleccion, std::string &nombre, std::string &eleccion_com) {
+void eleccion_pokemon(int& eleccion, std::string& nombre, std::string& eleccion_com) {
 	while (true) {
 		std::cin >> eleccion;
 		std::cout << "\n";
@@ -70,7 +70,7 @@ void eleccion_pokemon(int &eleccion, std::string &nombre, std::string &eleccion_
 }
 
 //funcion de batalla
-void batalla(int &vida, int &vida_com, int &eleccion, int &eficiencia, int &curaciones, std::string &eleccion_com, std::string &nombre) {
+void batalla(int& vida, int& vida_com, int& eleccion, int& eficiencia, int& curaciones, std::string& eleccion_com, std::string& nombre) {
 	std::cout << "Es hora de la batalla!";
 	std::cout << "\n";
 	std::cout << "\n";
@@ -219,7 +219,7 @@ void batalla(int &vida, int &vida_com, int &eleccion, int &eficiencia, int &cura
 }
 
 //funcion de reinicio
-void reinicio(int & reiniciar) {
+void reinicio(int& reiniciar) {
 	std::cout << "Deseas volver a iniciar papu?" << "\n";
 	std::cout << "1: si, 2: no" << "\n";
 	std::cin >> reiniciar;
@@ -249,7 +249,7 @@ int main()
 
 		Sleep(1000);
 		system("cls");
-		
+
 		//batalla pokemon
 		batalla(vida, vida_com, eleccion, eficiencia, curaciones, eleccion_com, nombre);
 
@@ -258,6 +258,6 @@ int main()
 
 		//reicio del programa
 		reinicio(reiniciar);
-		
+
 	} while (reiniciar == 1);
 }
