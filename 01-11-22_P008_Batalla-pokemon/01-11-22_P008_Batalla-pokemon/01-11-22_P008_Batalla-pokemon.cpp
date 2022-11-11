@@ -219,45 +219,48 @@ void batalla(int& vida, int& vida_com, int& eleccion, int& eficiencia, int& cura
 }
 
 //funcion de reinicio
-void reinicio(int& reiniciar) {
+void reinicio(int& reiniciar, int main()) {
 	std::cout << "Deseas volver a iniciar papu?" << "\n";
 	std::cout << "1: si, 2: no" << "\n";
 	std::cin >> reiniciar;
-	system("cls");
+
+	if (reiniciar == 1)
+	{
+		system("cls");
+		main();
+	}
 }
 
 int main()
 {
 	//ciclo de reinicio
 	int reiniciar = 1;
-	do {
-		//variables
-		int eleccion = 0;
-		std::string eleccion_com = "";
-		std::string nombre = "";
-		int vida = 100;
-		int vida_com = 100;
-		int curaciones = 3;
-		int eficiencia;
-		srand(time(NULL));
 
-		//menu principal
-		menu_principal();
+	//variables
+	int eleccion = 0;
+	std::string eleccion_com = "";
+	std::string nombre = "";
+	int vida = 100;
+	int vida_com = 100;
+	int curaciones = 3;
+	int eficiencia;
+	srand(time(NULL));
 
-		//comprobador de eleccion posible
-		eleccion_pokemon(eleccion, nombre, eleccion_com);
+	//menu principal
+	menu_principal();
 
-		Sleep(1000);
-		system("cls");
+	//comprobador de eleccion posible
+	eleccion_pokemon(eleccion, nombre, eleccion_com);
 
-		//batalla pokemon
-		batalla(vida, vida_com, eleccion, eficiencia, curaciones, eleccion_com, nombre);
+	Sleep(1000);
+	system("cls");
 
-		Sleep(2000);
-		system("cls");
+	//batalla pokemon
+	batalla(vida, vida_com, eleccion, eficiencia, curaciones, eleccion_com, nombre);
 
-		//reicio del programa
-		reinicio(reiniciar);
+	Sleep(2000);
+	system("cls");
 
-	} while (reiniciar == 1);
+	//reicio del programa
+	reinicio(reiniciar, main);
 }
