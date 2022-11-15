@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <time.h>
+#include <Windows.h>
 #include <fstream>
 #include <vector>
 #include <locale.h>
@@ -10,7 +11,7 @@
 class Estudiante {
 public:
     std::string nombre;
-    int vida;
+    int vida = 100;
     int fuerza;
     int velocidad;
     int defensa;
@@ -128,8 +129,6 @@ void orden_rango(std::vector<Estudiante> lista_estudiantes, int rango) {
         std::cout << "\n";
         std::cout << "\n";
         imprimir_lista_rangos(lista_temporal, rangos[0]);
-        std::cout << "\n";
-        std::cout << "\n";
         break;
 
     case 1:
@@ -143,8 +142,6 @@ void orden_rango(std::vector<Estudiante> lista_estudiantes, int rango) {
         std::cout << "\n";
         std::cout << "\n";
         imprimir_lista_rangos(lista_temporal, rangos[1]);
-        std::cout << "\n";
-        std::cout << "\n";
         break;
 
     case 2:
@@ -158,8 +155,6 @@ void orden_rango(std::vector<Estudiante> lista_estudiantes, int rango) {
         std::cout << "\n";
         std::cout << "\n";
         imprimir_lista_rangos(lista_temporal, rangos[2]);
-        std::cout << "\n";
-        std::cout << "\n";
         break;
 
     case 3:
@@ -173,8 +168,6 @@ void orden_rango(std::vector<Estudiante> lista_estudiantes, int rango) {
         std::cout << "\n";
         std::cout << "\n";
         imprimir_lista_rangos(lista_temporal, rangos[3]);
-        std::cout << "\n";
-        std::cout << "\n";
         break;
     }
 }
@@ -183,7 +176,8 @@ void orden_rango(std::vector<Estudiante> lista_estudiantes, int rango) {
 void asignar_nombre(std::vector<Estudiante>& lista_estudiantes) {
     std::ifstream MyReadFile("lista-nombres.txt");
     for (int i = 0; i < lista_estudiantes.size(); i++) {
-        getline(MyReadFile, lista_estudiantes[i].nombre);
+        if (i > 28) lista_estudiantes[i].nombre = "Estudiante generico";
+        else getline(MyReadFile, lista_estudiantes[i].nombre);
     }
     MyReadFile.close();
 }
@@ -193,7 +187,7 @@ void aptitud_aleatoria(std::vector<Estudiante>& lista_estudiantes) {
     int r;
     for (int i = 0; i < lista_estudiantes.size(); i++) {
         r = rand() % 49;
-        lista_estudiantes[i].vida = r;
+        lista_estudiantes[i].vida += r;
         r = rand() % 49;
         lista_estudiantes[i].fuerza = r;
         r = rand() % 49;
@@ -203,17 +197,96 @@ void aptitud_aleatoria(std::vector<Estudiante>& lista_estudiantes) {
     }
 }
 
+//Funcion para imprimir los alumnos restantes
+void alumnos_restantes(int estudiantes) {
+    std::cout << "Alumnos restantes";
+    std::cout << "\n";
+    Sleep(500);
+    std::cout << ". ";
+    Sleep(500);
+    std::cout << ". ";
+    Sleep(500);
+    std::cout << ".";
+    Sleep(500);
+    std::cout << "\n";
+    std::cout << "\n";
+
+    std::string numero = std::to_string(estudiantes);
+    int digitos = numero.length();
+    int i = 0;
+    int j = 0;
+
+    std::string cero[] = { "  #### ", " ##  ##", " ##  ##", " ##  ##", "  #### " };
+    std::string uno[] = { "     ##", "     ##", "     ##", "     ##", "     ##" };
+    std::string dos[] = { " ##### ", "     ##", "  #### ", " ##    " , "  #####" };
+    std::string tres[] = { " ######", "     ##", "   ####", "     ##", " ######" };
+    std::string cuatro[] = { " ##  ##", " ##  ##", " ######", "     ##", "     ##" };
+    std::string cinco[] = { " ######", " ##    ", "  #### ", "     ##", " ##### " };
+    std::string seis[] = { "  #####", " ##    ", " ######", " ##    #", "  #####" };
+    std::string siete[] = { " ######", "     ##", "    ## ", "   ##  ", "  ##   " };
+    std::string ocho[] = { "  #### ", " ##  ##", "  #### ", " ##  ##", "  #### " };
+    std::string nueve[] = { "  #####", " ##  ##", "  #####", "     ##", "     ##" };
+
+    while (j < 5) {
+        if (numero[i] == '0') {
+            std::cout << cero[j];
+            i++;
+        }
+        if (numero[i] == '1') {
+            std::cout << uno[j];
+            i++;
+        }
+        if (numero[i] == '2') {
+            std::cout << dos[j];
+            i++;
+        }
+        if (numero[i] == '3') {
+            std::cout << tres[j];
+            i++;
+        }
+        if (numero[i] == '4') {
+            std::cout << cuatro[j];
+            i++;
+        }
+        if (numero[i] == '5') {
+            std::cout << cinco[j];
+            i++;
+        }
+        if (numero[i] == '6') {
+            std::cout << seis[j];
+            i++;
+        }
+        if (numero[i] == '7') {
+            std::cout << siete[j];
+            i++;
+        }
+        if (numero[i] == '8') {
+            std::cout << ocho[j];
+            i++;
+        }
+        if (numero[i] == '9') {
+            std::cout << nueve[j];
+            i++;
+        }
+        if (i == digitos) {
+            std::cout << std::endl;
+            j++;
+            i = 0;
+        }
+    }
+}
+
 int main()
 {
     //Asignar el lenguaje a caracteres en español
     setlocale(LC_ALL, "es_ES.UTF-8");
 
-    //Creacion de la lista de objetos de estudiantes
-    std::vector<Estudiante> lista_estudiantes(29);
-
     //Variables del programa
     srand(time(NULL));
     int rango;
+    int estudiantes;
+    estudiantes = 100;
+    std::vector<Estudiante> lista_estudiantes(estudiantes);
 
     //Asignar los nombres de los alumnos
     asignar_nombre(lista_estudiantes);
@@ -223,7 +296,30 @@ int main()
 
     //mostrar el rango de mayor a menor
     orden_rango(lista_estudiantes, rango = 0);
+    std::cout << "\n";
+    system("pause");
+    system("cls");
+
     orden_rango(lista_estudiantes, rango = 1);
+    std::cout << "\n";
+    system("pause");
+    system("cls");
+
     orden_rango(lista_estudiantes, rango = 2);
+    std::cout << "\n";
+    system("pause");
+    system("cls");
+
     orden_rango(lista_estudiantes, rango = 3);
+    std::cout << "\n";
+    system("pause");
+    system("cls");
+
+    std::cout << "Se predice que " << lista_estudiantes[rango = rand() % estudiantes].nombre << " va a ganar!";
+    std::cout << "\n";
+    Sleep(2000);
+    system("cls");
+
+    //mostrar los alumnos restantes
+    alumnos_restantes(estudiantes);
 }
