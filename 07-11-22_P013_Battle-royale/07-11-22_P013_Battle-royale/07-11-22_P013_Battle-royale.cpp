@@ -12,15 +12,15 @@ class Estudiante {
 public:
     std::string nombre;
     int vida = 100;
-    int fuerza;
-    int velocidad;
-    int defensa;
+    int fuerza = 0;
+    int velocidad = 0;
+    int defensa = 0;
 };
 
 //Estructura para enlistar de forma ordenada
 struct Lista {
     std::string nombre;
-    int numero;
+    int numero = 0;
 };
 
 //Funcion imprimir lista de estudiantes con su rango segun la habilidad
@@ -216,16 +216,16 @@ void alumnos_restantes(int estudiantes) {
     int i = 0;
     int j = 0;
 
-    std::string cero[] = { "  #### ", " ##  ##", " ##  ##", " ##  ##", "  #### " };
+    std::string cero[] = { " ######", " ##  ##", " ##  ##", " ##  ##", " ######" };
     std::string uno[] = { "     ##", "     ##", "     ##", "     ##", "     ##" };
-    std::string dos[] = { " ##### ", "     ##", "  #### ", " ##    " , "  #####" };
-    std::string tres[] = { " ######", "     ##", "   ####", "     ##", " ######" };
+    std::string dos[] = { " ######", "     ##", " ######", " ##    " , " ######" };
+    std::string tres[] = { " ######", "     ##", " ######", "     ##", " ######" };
     std::string cuatro[] = { " ##  ##", " ##  ##", " ######", "     ##", "     ##" };
-    std::string cinco[] = { " ######", " ##    ", "  #### ", "     ##", " ##### " };
-    std::string seis[] = { "  #####", " ##    ", " ######", " ##    #", "  #####" };
-    std::string siete[] = { " ######", "     ##", "    ## ", "   ##  ", "  ##   " };
-    std::string ocho[] = { "  #### ", " ##  ##", "  #### ", " ##  ##", "  #### " };
-    std::string nueve[] = { "  #####", " ##  ##", "  #####", "     ##", "     ##" };
+    std::string cinco[] = { " ######", " ##    ", " ######", "     ##", " ######" };
+    std::string seis[] = { " ######", " ##    ", " ######", " ##  ##", " ######" };
+    std::string siete[] = { " ######", "     ##", "     ##", "     ##", "     ##" };
+    std::string ocho[] = { " ######", " ##  ##", " ######", " ##  ##", " ######" };
+    std::string nueve[] = { " ######", " ##  ##", " ######", "     ##", "     ##" };
 
     while (j < 5) {
         if (numero[i] == '0') {
@@ -274,6 +274,190 @@ void alumnos_restantes(int estudiantes) {
             i = 0;
         }
     }
+    std::cout << "\n";
+    Sleep(1000);
+    system("cls");
+}
+
+//Funcion evento de pelea
+void evento_pelea(int estudiante1, int estudiante2, std::vector<Estudiante>& lista_estudiantes) {
+    std::cout << "Parece que " << lista_estudiantes[estudiante1].nombre << " esta peleando contra " << lista_estudiantes[estudiante2].nombre << "!";
+    std::cout << "\n";
+    if (lista_estudiantes[estudiante2].defensa >= lista_estudiantes[estudiante1].fuerza) {
+        lista_estudiantes[estudiante2].defensa -= lista_estudiantes[estudiante1].fuerza;
+        std::cout << "Pero tan solo logra reducir la defensa de " << lista_estudiantes[estudiante2].nombre << " a " << lista_estudiantes[estudiante2].defensa << " puntos de defensa!";
+    }
+    else {
+        lista_estudiantes[estudiante2].vida -= (lista_estudiantes[estudiante1].fuerza - lista_estudiantes[estudiante2].defensa);
+        lista_estudiantes[estudiante2].defensa = 0;
+        if (lista_estudiantes[estudiante2].vida > 0) {
+            std::cout << "Parece que " << lista_estudiantes[estudiante1].nombre << " logro herir a " << lista_estudiantes[estudiante2].nombre << " dejandolo a " << lista_estudiantes[estudiante2].vida << " puntos de vida!";
+        }
+        else {
+            std::cout << "Increible!!! " << lista_estudiantes[estudiante1].nombre << " acaba de matar a " << lista_estudiantes[estudiante2].nombre << " terminado este enfrentamiento!";
+            lista_estudiantes.erase(lista_estudiantes.begin() + estudiante2);
+        }
+    }
+    std::cout << "\n";
+    std::cout << "\n";
+}
+
+//Funcion evento comida
+void evento_comida(int estudiante1, int estudiante2, std::vector<Estudiante>& lista_estudiantes) {
+    std::cout << lista_estudiantes[estudiante1].nombre << " y " << lista_estudiantes[estudiante2].nombre << " han decidido dejar de pelear para para poder comer...";
+    std::cout << "\n";
+    int rango = rand() % 3;
+    
+    switch (rango)
+    {
+    case 0:
+        std::cout << "Pero parece que ambos se han intoxicado perdiendo velocidad por su pesima cocina";
+        if (lista_estudiantes[estudiante1].velocidad > 0) {
+            lista_estudiantes[estudiante1].velocidad -= rand() % lista_estudiantes[estudiante1].velocidad;
+        }
+        if (lista_estudiantes[estudiante1].vida > 1) {
+            lista_estudiantes[estudiante1].vida -= rand() % lista_estudiantes[estudiante1].vida;
+        }
+        if (lista_estudiantes[estudiante2].velocidad > 0) {
+            lista_estudiantes[estudiante2].velocidad -= rand() % lista_estudiantes[estudiante2].velocidad;
+        }
+        if (lista_estudiantes[estudiante2].vida > 1) {
+            lista_estudiantes[estudiante2].vida -= rand() % lista_estudiantes[estudiante2].vida;
+        }
+        break;
+    case 1:
+        std::cout << "Al parecer ninguno tenia algo para comer...";
+        break;
+    case 2:
+        std::cout << "Increible! jamas habia visto una comida tan coordinada y deliciosa! su velocidad y su vida se han elevado!";
+        lista_estudiantes[estudiante1].vida += rand() % 20;
+        lista_estudiantes[estudiante1].velocidad += rand() % 20;
+        lista_estudiantes[estudiante2].vida += rand() % 20;
+        lista_estudiantes[estudiante2].velocidad += rand() % 20;
+        break;
+    }
+    std::cout << "\n";
+    std::cout << "\n";
+}
+
+//Funcion evento botin
+void evento_botin(int estudiante1, int estudiante2, std::vector<Estudiante>& lista_estudiantes) {
+    std::cout << "una caja de botin se encuentra frente a " << lista_estudiantes[estudiante1].nombre << " y " << lista_estudiantes[estudiante2].nombre;
+    std::cout << "\n";
+    int rango = rand() % 4;
+    if (lista_estudiantes[estudiante1].velocidad > lista_estudiantes[estudiante2].velocidad) {
+        std::cout << lista_estudiantes[estudiante1].nombre << "resulto ser mas rapido que " << lista_estudiantes[estudiante2].nombre << " quedandose con una mejora de ";
+        switch (rango)
+        {
+        case 0:
+            std::cout << "absolutamente nada!";
+            break;
+        case 1:
+            lista_estudiantes[estudiante1].defensa += rand() % 20;
+            std::cout << "defensa!";
+            break;
+        case 2:
+            lista_estudiantes[estudiante1].fuerza += rand() % 20;
+            std::cout << "fuerza!";
+            break;
+        case 3:
+            lista_estudiantes[estudiante1].vida += rand() % 20;
+            std::cout << "vida!";
+            break;
+        }
+    }
+    else {
+        std::cout << lista_estudiantes[estudiante2].nombre << "resulto ser mas rapido que " << lista_estudiantes[estudiante1].nombre << " quedandose con una mejora de ";
+        switch (rango)
+        {
+        case 0:
+            std::cout << "absolutamente nada!";
+            break;
+        case 1:
+            lista_estudiantes[estudiante2].defensa += rand() % 20;
+            std::cout << "defensa!";
+            break;
+        case 2:
+            lista_estudiantes[estudiante2].fuerza += rand() % 20;
+            std::cout << "fuerza!";
+            break;
+        case 3:
+            lista_estudiantes[estudiante2].vida += rand() % 20;
+            std::cout << "vida!";
+            break;
+        }
+    }
+    std::cout << "\n";
+    std::cout << "\n";
+}
+
+//Funcion evento tenis
+void evento_tenis(int estudiante1, int estudiante2, std::vector<Estudiante>& lista_estudiantes) {
+    std::cout << "Al parecer " << lista_estudiantes[estudiante1].nombre << " y " << lista_estudiantes[estudiante2].nombre << " estan intercambiando sus tenis para tener mas velocidad";
+    std::cout << "\n";
+    int rango = rand() % 3;
+    switch (rango)
+    {
+    case 0:
+        std::cout << "Parece que ha sido una terrible idea... ambos perdieron velocidad";
+        if (lista_estudiantes[estudiante1].velocidad > 0) {
+            lista_estudiantes[estudiante1].velocidad -= rand() % lista_estudiantes[estudiante1].velocidad;
+        }
+        if (lista_estudiantes[estudiante2].velocidad > 0) {
+            lista_estudiantes[estudiante2].velocidad -= rand() % lista_estudiantes[estudiante2].velocidad;
+        }
+        break;
+    case 1:
+        std::cout << "Parece que no mejoro nada cambiar tenis";
+        break;
+    case 2:
+        std::cout << "No lo puedo creer, de alguna manera se han vuelto mas rapidos con solo intercambiar sus tenis!";
+        lista_estudiantes[estudiante1].velocidad += rand() % 20;
+        lista_estudiantes[estudiante2].velocidad += rand() % 20;
+        break;
+    }
+    std::cout << "\n";
+    std::cout << "\n";
+}
+
+//Funcion de evento aleatorio
+void evento_aleatorio(std::vector<Estudiante>& lista_estudiantes) {
+    int rango;
+    int aleatorio1, aleatorio2;
+    int seccion = 8;
+    for (int i = 0; i < lista_estudiantes.size(); i++) {
+        rango = rand() % 4;
+        aleatorio1 = rand() % lista_estudiantes.size();
+        aleatorio2 = rand() % lista_estudiantes.size();
+        while (aleatorio1 == aleatorio2) {
+            aleatorio2 = rand() % lista_estudiantes.size();
+        }
+
+        switch (rango) {
+            case 0:
+                evento_pelea(aleatorio1, aleatorio2, lista_estudiantes);
+                break;
+
+            case 1:
+                evento_comida(aleatorio1, aleatorio2, lista_estudiantes);
+                break;
+
+            case 2:
+                evento_botin(aleatorio1, aleatorio2, lista_estudiantes);
+                break;
+
+            case 3:
+                evento_tenis(aleatorio1, aleatorio2, lista_estudiantes);
+                break;
+
+        }
+
+        if (i == seccion) {
+            Sleep(1000);
+            system("cls");
+            seccion += 9;
+        }
+    }
 }
 
 int main()
@@ -286,6 +470,8 @@ int main()
     int rango;
     int estudiantes;
     estudiantes = 100;
+    int vivos = estudiantes;
+    int ronda = 1;
     std::vector<Estudiante> lista_estudiantes(estudiantes);
 
     //Asignar los nombres de los alumnos
@@ -318,8 +504,47 @@ int main()
     std::cout << "Se predice que " << lista_estudiantes[rango = rand() % estudiantes].nombre << " va a ganar!";
     std::cout << "\n";
     Sleep(2000);
+
+    lista_estudiantes[rango].defensa += 10;
+    lista_estudiantes[rango].fuerza += 10;
+    lista_estudiantes[rango].vida += 10;
+    lista_estudiantes[rango].velocidad += 10;
+
+
+    while (true) {
+        system("cls");
+
+        std::cout << "Ronda: " << ronda << "!";
+        std::cout << "\n";
+        std::cout << "\n";
+
+        //mostrar los alumnos restantes
+        if (vivos != estudiantes) {
+            alumnos_restantes(estudiantes);
+            vivos = estudiantes;
+        }
+        else {
+            Sleep(1000);
+            system("cls");
+        }
+
+        //eventos aleatorios
+        evento_aleatorio(lista_estudiantes);
+        if(estudiantes % 9 != 0 or estudiantes < 9)
+        Sleep(1000);
+        estudiantes = lista_estudiantes.size();
+
+        if (estudiantes == 1) {
+            break;
+        }
+
+        ronda++;
+    }
+
+    Sleep(2000);
     system("cls");
 
-    //mostrar los alumnos restantes
-    alumnos_restantes(estudiantes);
+    std::cout << "Damas y caballeros despues de " << ronda << " rondas " << "restandole " << lista_estudiantes[0].vida << " puntos de vida... " << lista_estudiantes[0].nombre << " es nuestro campeon de este battle royale!";
+    std::cout << "\n";
+    std::cout << "\n";
 }
