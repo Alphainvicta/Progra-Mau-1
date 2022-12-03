@@ -420,13 +420,82 @@ void evento_tenis(int estudiante1, int estudiante2, std::vector<Estudiante>& lis
     std::cout << "\n";
 }
 
+//Funcion evento traicion
+void evento_muerte_ambiente(int estudiante1, int estudiante2, std::vector<Estudiante>& lista_estudiantes) {
+    int rango = rand() % 2;
+    std::cout << "El suelo debajo de " << lista_estudiantes[estudiante1].nombre << " y " << lista_estudiantes[estudiante2].nombre << " ha empezado a caerse!";
+    std::cout << "\n";
+    if (lista_estudiantes[estudiante1].velocidad > lista_estudiantes[estudiante2].velocidad) {
+        std::cout << lista_estudiantes[estudiante1].nombre << " toma la delantera ";
+        if (lista_estudiantes[estudiante1].fuerza > lista_estudiantes[estudiante2].fuerza) {
+            std::cout << "y con su fuerza termina empujando a " << lista_estudiantes[estudiante2].nombre << " hacia el vacio ";
+            if (rango == 0){
+                std::cout << "eliminandolo por completo!!!";
+                lista_estudiantes.erase(lista_estudiantes.begin() + estudiante2);
+            }
+            else {
+                std::cout << " pero " << lista_estudiantes[estudiante2].nombre << " logra sobrevivir de milagro!!!";
+                if (lista_estudiantes[estudiante2].vida > 1) {
+                    lista_estudiantes[estudiante2].vida -= rand() % lista_estudiantes[estudiante2].vida;
+                }
+            }
+            return;
+        }
+        if (lista_estudiantes[estudiante1].fuerza < lista_estudiantes[estudiante2].fuerza) {
+            std::cout << "pero en un giro inesperado " << lista_estudiantes[estudiante2].nombre << " con su fuerza superior empuja a " << lista_estudiantes[estudiante1].nombre << " al vacio ";
+            if (rango == 0) {
+                std::cout << "eliminandolo por completo!!!";
+                lista_estudiantes.erase(lista_estudiantes.begin() + estudiante1);
+            }
+            else {
+                std::cout << " pero " << lista_estudiantes[estudiante1].nombre << " logra sobrevivir de milagro!!!";
+                if (lista_estudiantes[estudiante1].vida > 1) {
+                    lista_estudiantes[estudiante1].vida -= rand() % lista_estudiantes[estudiante1].vida;
+                }
+            }
+            return;
+        }
+    }
+
+    if (lista_estudiantes[estudiante1].velocidad < lista_estudiantes[estudiante2].velocidad) {
+        std::cout << lista_estudiantes[estudiante2].nombre << " toma la delantera ";
+        if (lista_estudiantes[estudiante1].fuerza < lista_estudiantes[estudiante2].fuerza) {
+            std::cout << "y con su fuerza termina empujando a " << lista_estudiantes[estudiante1].nombre << " hacia el vacio ";
+            if (rango == 0) {
+                std::cout << "eliminandolo por completo!!!";
+                lista_estudiantes.erase(lista_estudiantes.begin() + estudiante1);
+            }
+            else {
+                std::cout << " pero " << lista_estudiantes[estudiante1].nombre << " logra sobrevivir de milagro!!!";
+                if (lista_estudiantes[estudiante1].vida > 1) {
+                    lista_estudiantes[estudiante1].vida -= rand() % lista_estudiantes[estudiante1].vida;
+                }
+            }
+            return;
+        }
+        if (lista_estudiantes[estudiante1].fuerza > lista_estudiantes[estudiante2].fuerza) {
+            std::cout << "pero en un giro inesperado " << lista_estudiantes[estudiante1].nombre << " con su fuerza superior empuja a " << lista_estudiantes[estudiante2].nombre << " al vacio ";
+            if (rango == 0) {
+                std::cout << "eliminandolo por completo!!!";
+                lista_estudiantes.erase(lista_estudiantes.begin() + estudiante2);
+            }
+            else {
+                std::cout << " pero " << lista_estudiantes[estudiante2].nombre << " logra sobrevivir de milagro!!!";
+                if (lista_estudiantes[estudiante2].vida > 1) {
+                    lista_estudiantes[estudiante2].vida -= rand() % lista_estudiantes[estudiante2].vida;
+                }
+            }
+            return;
+        }
+    }
+}
+
 //Funcion de evento aleatorio
 void evento_aleatorio(std::vector<Estudiante>& lista_estudiantes) {
     int rango;
     int aleatorio1, aleatorio2;
-    int seccion = 8;
     for (int i = 0; i < lista_estudiantes.size(); i++) {
-        rango = rand() % 4;
+        rango = rand() % 5;
         aleatorio1 = rand() % lista_estudiantes.size();
         aleatorio2 = rand() % lista_estudiantes.size();
         while (aleatorio1 == aleatorio2) {
@@ -449,14 +518,54 @@ void evento_aleatorio(std::vector<Estudiante>& lista_estudiantes) {
             case 3:
                 evento_tenis(aleatorio1, aleatorio2, lista_estudiantes);
                 break;
-
+            case 4:
+                evento_muerte_ambiente(aleatorio1, aleatorio2, lista_estudiantes);
+                std::cout << "\n";
+                std::cout << "\n";
+                break;
         }
+    }
+}
 
-        if (i == seccion) {
+//Funcion de mejorar al favorito
+void estudiante_predicto(std::vector<Estudiante>& lista_estudiantes, int rango, int estudiantes) {
+    std::cout << "Se predice que " << lista_estudiantes[rango = rand() % estudiantes].nombre << " va a ganar!";
+    std::cout << "\n";
+    Sleep(2000);
+    lista_estudiantes[rango].defensa += 10;
+    lista_estudiantes[rango].fuerza += 10;
+    lista_estudiantes[rango].vida += 10;
+    lista_estudiantes[rango].velocidad += 10;
+}
+
+//Funcion del battle royale
+void battle_royale(int& vivos, int& estudiantes, int& ronda, std::vector<Estudiante>& lista_estudiantes) {
+    while (true) {
+        system("cls");
+
+        std::cout << "Ronda: " << ronda << "!";
+        std::cout << "\n";
+        std::cout << "\n";
+
+        //mostrar los alumnos restantes
+        if (vivos != estudiantes) {
+            alumnos_restantes(estudiantes);
+            vivos = estudiantes;
+        }
+        else {
             Sleep(1000);
             system("cls");
-            seccion += 9;
         }
+
+        //eventos aleatorios
+        evento_aleatorio(lista_estudiantes);
+        system("pause");
+        estudiantes = lista_estudiantes.size();
+
+        if (estudiantes == 1) {
+            break;
+        }
+        ronda++;
     }
 }
 
@@ -501,47 +610,11 @@ int main()
     system("pause");
     system("cls");
 
-    std::cout << "Se predice que " << lista_estudiantes[rango = rand() % estudiantes].nombre << " va a ganar!";
-    std::cout << "\n";
-    Sleep(2000);
+    //Se mejora a un estudiante elegido al azar
+    estudiante_predicto(lista_estudiantes, rango, estudiantes);
 
-    lista_estudiantes[rango].defensa += 10;
-    lista_estudiantes[rango].fuerza += 10;
-    lista_estudiantes[rango].vida += 10;
-    lista_estudiantes[rango].velocidad += 10;
-
-
-    while (true) {
-        system("cls");
-
-        std::cout << "Ronda: " << ronda << "!";
-        std::cout << "\n";
-        std::cout << "\n";
-
-        //mostrar los alumnos restantes
-        if (vivos != estudiantes) {
-            alumnos_restantes(estudiantes);
-            vivos = estudiantes;
-        }
-        else {
-            Sleep(1000);
-            system("cls");
-        }
-
-        //eventos aleatorios
-        evento_aleatorio(lista_estudiantes);
-        if(estudiantes % 9 != 0 or estudiantes < 9)
-        Sleep(1000);
-        estudiantes = lista_estudiantes.size();
-
-        if (estudiantes == 1) {
-            break;
-        }
-
-        ronda++;
-    }
-
-    Sleep(2000);
+    //Ciclo del battle royale
+    battle_royale(vivos, estudiantes, ronda, lista_estudiantes);
     system("cls");
 
     std::cout << "Damas y caballeros despues de " << ronda << " rondas " << "restandole " << lista_estudiantes[0].vida << " puntos de vida... " << lista_estudiantes[0].nombre << " es nuestro campeon de este battle royale!";
